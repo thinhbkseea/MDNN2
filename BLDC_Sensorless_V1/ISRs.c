@@ -138,14 +138,14 @@ __interrupt void TIMER1_B0_ISR(void)
             if ((signal_start == 1) && (up_speed_mode == 0))
             {
                 //reduce speed
-                if ((SensorlessTrapController.SetSpeed - 100) >= 500)
+                if ((SensorlessTrapController.SetSpeed - 100) >= 600)
                 {
                     SensorlessTrapController.SetSpeed -= 100;
                 }
 
-                if ((SensorlessTrapController.SetSpeed -100) <= 500)
+                if ((SensorlessTrapController.SetSpeed -100) <= 600)
                 {
-                    SensorlessTrapController.SetSpeed = 500;
+                    SensorlessTrapController.SetSpeed = 600;
                 }
             }
 
@@ -305,6 +305,8 @@ __interrupt void TIMER1_B0_ISR(void)
                 time_count = 0;
                 P3OUT |= BIT2;
                 P3OUT &= ~BIT3;
+                if(ApplicationStatus.currentstate>2)
+                    PMMCTL0 |= PMMSWPOR;
             }
         }
 
@@ -550,16 +552,16 @@ __interrupt void TIMER3_B0_ISR(void)
 
             if(SensorlessTrapController.AccelDistance > ACCEL_60_DEGREES)
             {                     //if distance is 60 degrees commutate
-                count_tmp ++;
+//                count_tmp ++;
 //                if(SensorlessTrapController.CurrentDutyCycle > 500)
 //                {
 //                    //P3OUT |= BIT1;
 //                    SensorlessTrapController.SetSpeed = SensorlessTrapController.CurrentDutyCycle;
 //                }
-                if (count_tmp > 40)
-                    P3OUT |= BIT1;
-                if (count_tmp > 120)
-                    P3OUT &= ~BIT1;
+//                if (count_tmp > 40)
+//                    P3OUT |= BIT1;
+//                if (count_tmp > 120)
+//                    P3OUT &= ~BIT1;
 
                 SensorlessTrapController.AccelDistance = 0;
                 UpdateNextCommutation();
@@ -573,9 +575,9 @@ __interrupt void TIMER3_B0_ISR(void)
 
                     UpdateBEMFADC();
                     SensorlessTrapController.AccelDone = TRUE;
-                    P3OUT &= ~BIT1;
-                    //P3OUT |= BIT1;
-                    count_tmp = 0;
+//                    P3OUT &= ~BIT1;
+                    P3OUT |= BIT1;
+//                    count_tmp = 0;
                 }
             }
         }

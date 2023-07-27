@@ -960,8 +960,8 @@ void ReadVCC()
 //        SensorlessTrapController.CTvoltage = //1450;//460;
 //                (SensorlessTrapController.VCCvoltage >> 1);                                         // Center tap voltage is VCC/2 , used in BEMF integration calculation
 //    else
-        SensorlessTrapController.CTvoltage = 1300;//460;
-//        (SensorlessTrapController.VCCvoltage >> 1)-250;                                         // Center tap voltage is VCC/2 , used in BEMF integration calculation
+        SensorlessTrapController.CTvoltage = //1300;//460;
+        (SensorlessTrapController.VCCvoltage >> 1);                                         // Center tap voltage is VCC/2 , used in BEMF integration calculation
 
     if(SensorlessTrapController.VCCvoltage <
             SensorlessTrapController.UnderVolLim | SensorlessTrapController.VCCvoltage >
@@ -1062,8 +1062,8 @@ void ReadCurrentShunt()
     SensorlessTrapController.MotorPhaseCurrent = abs(
     SensorlessTrapController.MotorPhaseCurrent);
 
-    if(SensorlessTrapController.MotorPhaseCurrent > 200)
-        P3OUT |= BIT1;
+//    if(SensorlessTrapController.MotorPhaseCurrent > 200)
+//        P3OUT |= BIT1;
     if(SensorlessTrapController.MotorPhaseCurrent >
        SensorlessTrapController.MotorPhaseCurrentLimit)                                                   /* Motor Phase Current Limit*/
     {
