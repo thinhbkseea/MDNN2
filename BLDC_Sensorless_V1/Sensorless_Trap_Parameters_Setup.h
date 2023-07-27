@@ -19,24 +19,24 @@
 
 //Align User Parameters
 #define ALIGN_SECTOR                1       // Align commutation sequence (1-6)
-#define ALIGN_WAIT_TIME             150//500     // Number of PWM cycles to Wait during align align time seconds = [this number * 41us]
+#define ALIGN_WAIT_TIME             150//500//150     // Number of PWM cycles to Wait during align align time seconds = [this number * 41us]
 
 //Open Loop Acceleration User Parameters
 #define ACCEL_RATE                  40//40      // {Hz/s}
 #define ACCEL_STOP                  50000//50000   // {mHz}
-#define ACCEL_VELOCITY_INIT         20000//10000   // {mHz}
+#define ACCEL_VELOCITY_INIT         28000//10000   // {mHz} 28000
 
 //Closed Loop User Parameters
 #define BEMF_THRESHOLD              1700//1960    // BEMF Integration threshold according to calculations of BEMF waveform
-#define RAMP_RATE_DELAY             20  //100   // This number controls the acceleration,  duty cycle is updated after ( RAMP_RATE_DELAY * 1000) clock cycles
-#define RAMP_RATE                   2 //1       // This is the change in dutycycle (increment/decrement) for every update
+#define RAMP_RATE_DELAY             50  //100   // This number controls the acceleration,  duty cycle is updated after ( RAMP_RATE_DELAY * 1000) clock cycles
+#define RAMP_RATE                   1 //1       // This is the change in dutycycle (increment/decrement) for every update
 #define COMMUTATION_BLANK_TIME      5       // How many PWM cycles to blank before sampling the BEMF
 #define PWM_BLANK_COUNTS            20//5       // How many Clock cycles before the center of PWM  the BEMF is sampled
 
 #define MAX_DUTY_CYCLE              1000        // relative to PWM_PERIOD
 #define MIN_OFF_DUTY                0//250         // relative to PWM_PERIOD
 #define MIN_ON_DUTY                 10//260         // relative to PWM_PERIOD
-#define START_UP_DUTY_CYCLE         100 //100         // relative to PWM_PERIOD
+#define START_UP_DUTY_CYCLE         200 //100 //200 ok  //300      // relative to PWM_PERIOD
 #define PWM_FACTOR                  0           //  ADC 12 bit to PWM width ratio , by default 0 represents 12 bit scaling
 
 /* Fault handling setup */                      /*ADC Max ref voltage is 3.3v ,  VCC is scaled by 0.0573 internally (5/88 Ohms bridge) so that VCC ref input to ADC never cross 3.3v The maximum supply voltage is 57.5v.*/

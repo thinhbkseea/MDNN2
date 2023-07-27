@@ -32,6 +32,7 @@ _Bool stop_signal = 0;
 unsigned int start_tmp=0;
 unsigned int pulse_delay = 0;
 unsigned int port_delay = 0;
+unsigned int count_tmp = 0;
 
 // Registers
 extern FLT_STAT_REG0_Obj Fault_Status_Reg;
@@ -137,14 +138,14 @@ __interrupt void TIMER1_B0_ISR(void)
             if ((signal_start == 1) && (signal_stop == 0))
             {
                 //reduce speed
-                if ((SensorlessTrapController.SetSpeed - 100) >= 300)
+//                if ((SensorlessTrapController.SetSpeed - 100) >= 300)
+//                {
+//                    SensorlessTrapController.SetSpeed -= 100;
+//                }
+                SensorlessTrapController.SetSpeed -= 100;
+                if ((SensorlessTrapController.SetSpeed -100) <= 400)
                 {
-                    SensorlessTrapController.SetSpeed -= 100;
-                }
-
-                if ((SensorlessTrapController.SetSpeed -100) <= 300)
-                {
-                    SensorlessTrapController.SetSpeed = 300;
+                    SensorlessTrapController.SetSpeed = 400;
                 }
             }
 
@@ -198,21 +199,22 @@ __interrupt void TIMER1_B0_ISR(void)
         {
             signal_start = 1;
             //start
-            SensorlessTrapController.SetSpeed = 600; //600
+            SensorlessTrapController.SetSpeed = 700; //600 700
             HostController.EnabledGateDrivers = 0x01;
             HostController.Start_Stop_Motor = 0x00;
         }
         if ( ApplicationStatus.currentstate == MOTOR_RUN && up_speed_mode == 0)
         {
             //up speed
-            if (SensorlessTrapController.SetSpeed <= (SensorlessTrapController.MaxDutyCycle - 100))
+//            if (SensorlessTrapController.SetSpeed <= (SensorlessTrapController.MaxDutyCycle - 100))
+//            {
+//                SensorlessTrapController.SetSpeed += 100;
+//            }
+            SensorlessTrapController.SetSpeed += 100;
+            if (SensorlessTrapController.SetSpeed >= 900)
             {
-                SensorlessTrapController.SetSpeed += 100;
-            }
-            if ((SensorlessTrapController.SetSpeed + 100)>= SensorlessTrapController.MaxDutyCycle)
-            {
-                SensorlessTrapController.SetSpeed =
-                        SensorlessTrapController.MaxDutyCycle;
+                SensorlessTrapController.SetSpeed = 900;
+
             }
 
         }
@@ -232,21 +234,21 @@ __interrupt void TIMER1_B0_ISR(void)
         break;
     }
 
-    if (signal_stop == 1)
-    {
-        t_shutdown++;
-        if (t_shutdown >= COUNTER_2_SECONDS)
-        {
-            shutdown_count++;
-            if(shutdown_count >=3)
-            {
-                signal_stop = 0;
-            }
-
-            t_shutdown = 0;
-        }
-
-    }
+//    if (signal_stop == 1)
+//    {
+//        t_shutdown++;
+//        if (t_shutdown >= COUNTER_2_SECONDS)
+//        {
+//            shutdown_count++;
+//            if(shutdown_count >=3)
+//            {
+//                signal_stop = 0;
+//            }
+//
+//            t_shutdown = 0;
+//        }
+//
+//    }
 //    if (press_on_off == 1)
 //    {
 //        press_time++;
@@ -532,7 +534,7 @@ __interrupt void TIMER3_B0_ISR(void)
                 (SensorlessTrapController.AccelVelocityInit - (SensorlessTrapController.AccelRate >> 1)) >>
                 3;                                                                                                                       //calculate distance
 
-            if(SensorlessTrapController.CurrentDutyCycle<350)
+            if(SensorlessTrapController.CurrentDutyCycle < 700)//350 SensorlessTrapController.SetSpeed
             {
                 start_tmp ++;
                 if (start_tmp == 2)
@@ -547,8 +549,18 @@ __interrupt void TIMER3_B0_ISR(void)
 
             if(SensorlessTrapController.AccelDistance > ACCEL_60_DEGREES)
             {                     //if distance is 60 degrees commutate
-                SensorlessTrapController.AccelDistance = 0;
+//                count_tmp ++;
+//                if(SensorlessTrapController.CurrentDutyCycle > 500)
+//                {
+//                    //P3OUT |= BIT1;
+//                    SensorlessTrapController.SetSpeed = SensorlessTrapController.CurrentDutyCycle;
+//                }
+//                if (count_tmp > 40)
+//                    P3OUT |= BIT1;
+//                if (count_tmp > 120)
+//                    P3OUT &= ~BIT1;
 
+                SensorlessTrapController.AccelDistance = 0;
                 UpdateNextCommutation();
                 PWM_SetCommutation(SensorlessTrapController.CurrentCommState);
 
@@ -560,6 +572,9 @@ __interrupt void TIMER3_B0_ISR(void)
 
                     UpdateBEMFADC();
                     SensorlessTrapController.AccelDone = TRUE;
+                    P3OUT &= ~BIT1;
+                    //P3OUT |= BIT1;
+                    count_tmp = 0;
                 }
             }
         }

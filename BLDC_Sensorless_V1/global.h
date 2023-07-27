@@ -35,7 +35,7 @@ unsigned int close_loop_cycle;
 #define COUNTER_1_SECOND                        24000   //24414 * 40.96us = 2s
 #define COUNTER_2_SECONDS                       48000   //50000 * 40.96us = 2s
 #define ACCEL_30_DEGREES                        10417
-#define ACCEL_60_DEGREES                        20834
+#define ACCEL_60_DEGREES                        20834   //20834
 
 void EnableGateDrivers(void);
 void DisableGateDrivers(void);
