@@ -99,7 +99,7 @@ __interrupt void TIMER1_B0_ISR(void)
     {
 
         pulse_delay++;
-        if (pulse_delay >= 500)
+        if (pulse_delay >= 700)
         {
             if ((P2IN & BIT1) == 0)
             {
@@ -135,17 +135,17 @@ __interrupt void TIMER1_B0_ISR(void)
         time_count++;
         if (time_count >= 24000) //40us*40000
         {
-            if ((signal_start == 1) && (signal_stop == 0))
+            if ((signal_start == 1) && (up_speed_mode == 0))
             {
                 //reduce speed
-//                if ((SensorlessTrapController.SetSpeed - 100) >= 300)
-//                {
-//                    SensorlessTrapController.SetSpeed -= 100;
-//                }
-                SensorlessTrapController.SetSpeed -= 100;
-                if ((SensorlessTrapController.SetSpeed -100) <= 400)
+                if ((SensorlessTrapController.SetSpeed - 100) >= 500)
                 {
-                    SensorlessTrapController.SetSpeed = 400;
+                    SensorlessTrapController.SetSpeed -= 100;
+                }
+
+                if ((SensorlessTrapController.SetSpeed -100) <= 500)
+                {
+                    SensorlessTrapController.SetSpeed = 500;
                 }
             }
 
@@ -206,16 +206,17 @@ __interrupt void TIMER1_B0_ISR(void)
         if ( ApplicationStatus.currentstate == MOTOR_RUN && up_speed_mode == 0)
         {
             //up speed
-//            if (SensorlessTrapController.SetSpeed <= (SensorlessTrapController.MaxDutyCycle - 100))
-//            {
-//                SensorlessTrapController.SetSpeed += 100;
-//            }
-            SensorlessTrapController.SetSpeed += 100;
-            if (SensorlessTrapController.SetSpeed >= 900)
+            if (SensorlessTrapController.SetSpeed <= 810)//(SensorlessTrapController.MaxDutyCycle - 100))
             {
-                SensorlessTrapController.SetSpeed = 900;
-
+                SensorlessTrapController.SetSpeed += 100;
             }
+//            if (SensorlessTrapController.SetSpeed > 900)
+//                SensorlessTrapController.SetSpeed = 900;
+//            if ((SensorlessTrapController.SetSpeed + 100)>= SensorlessTrapController.MaxDutyCycle)
+//            {
+//                SensorlessTrapController.SetSpeed =
+//                        SensorlessTrapController.MaxDutyCycle;
+//            }
 
         }
 
@@ -234,21 +235,21 @@ __interrupt void TIMER1_B0_ISR(void)
         break;
     }
 
-//    if (signal_stop == 1)
-//    {
-//        t_shutdown++;
-//        if (t_shutdown >= COUNTER_2_SECONDS)
-//        {
-//            shutdown_count++;
-//            if(shutdown_count >=3)
-//            {
-//                signal_stop = 0;
-//            }
-//
-//            t_shutdown = 0;
-//        }
-//
-//    }
+    if (signal_stop == 1)
+    {
+        t_shutdown++;
+        if (t_shutdown >= COUNTER_2_SECONDS)
+        {
+            shutdown_count++;
+            if(shutdown_count >=3)
+            {
+                signal_stop = 0;
+            }
+
+            t_shutdown = 0;
+        }
+
+    }
 //    if (press_on_off == 1)
 //    {
 //        press_time++;
@@ -549,16 +550,16 @@ __interrupt void TIMER3_B0_ISR(void)
 
             if(SensorlessTrapController.AccelDistance > ACCEL_60_DEGREES)
             {                     //if distance is 60 degrees commutate
-//                count_tmp ++;
+                count_tmp ++;
 //                if(SensorlessTrapController.CurrentDutyCycle > 500)
 //                {
 //                    //P3OUT |= BIT1;
 //                    SensorlessTrapController.SetSpeed = SensorlessTrapController.CurrentDutyCycle;
 //                }
-//                if (count_tmp > 40)
-//                    P3OUT |= BIT1;
-//                if (count_tmp > 120)
-//                    P3OUT &= ~BIT1;
+                if (count_tmp > 40)
+                    P3OUT |= BIT1;
+                if (count_tmp > 120)
+                    P3OUT &= ~BIT1;
 
                 SensorlessTrapController.AccelDistance = 0;
                 UpdateNextCommutation();
